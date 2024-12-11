@@ -1,0 +1,5 @@
+regionwise_records: 481950
+statistics_records: 183274
+regionwise_date_range: 2007 - 2019
+regions: 105
+offense_types: 90
