@@ -14,7 +14,6 @@ class BaseFetcher:
             level=logging.INFO,
             format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
         )
-        # Using existing directory structure
         self.output_dir = Path("csvs-to-process")
         self.output_dir.mkdir(exist_ok=True)
 

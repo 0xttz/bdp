@@ -33,17 +33,16 @@ class BenefitsFetcher(BaseFetcher):
     def fetch(self):
         """Fetch unemployment percentage data"""
         try:
-            # First inspect metadata
             metadata = self.inspect_metadata()
             
             payload = {
                 "table": self.table_id,
                 "format": "BULK",
                 "variables": [
-                    {"code": "OMRÅDE", "values": ["*"]},     # All areas
-                    {"code": "ALDER", "values": ["TOT"]},    # All age groups
-                    {"code": "KØN", "values": ["TOT"]},      # Both genders
-                    {"code": "Tid", "values": ["*"]}         # All available periods
+                    {"code": "OMRÅDE", "values": ["*"]},     
+                    {"code": "ALDER", "values": ["TOT"]},   
+                    {"code": "KØN", "values": ["TOT"]},      
+                    {"code": "Tid", "values": ["*"]}         
                 ]
             }
 
@@ -61,31 +60,23 @@ class BenefitsFetcher(BaseFetcher):
     def _clean_dataframe(self, df: pd.DataFrame) -> pd.DataFrame:
         """Clean and format the dataframe"""
         try:
-            # Filter out non-municipalities
             df = df[df['OMRÅDE'].apply(self.is_municipality)]
             
-            # Convert to numeric
             df['INDHOLD'] = pd.to_numeric(df['INDHOLD'].str.replace(',', '.'), errors='coerce')
             
-            # Extract year from period (e.g., '2007M01' -> '2007')
             df['year'] = df['TID'].str[:4]
             
-            # Calculate yearly average for each municipality
             df_yearly = df.groupby(['OMRÅDE', 'year'])['INDHOLD'].mean().reset_index()
             
-            # Rename columns
             df_yearly = df_yearly.rename(columns={
                 'OMRÅDE': 'municipality',
                 'INDHOLD': 'unemployment_pct'
             })
 
-            # Select and order columns
             df_yearly = df_yearly[['municipality', 'year', 'unemployment_pct']]
             
-            # Sort values
             df_yearly = df_yearly.sort_values(['municipality', 'year'])
             
-            # Log some statistics for validation
             self.logger.info(f"\nData summary:")
             self.logger.info(f"Year range: {df_yearly['year'].min()} - {df_yearly['year'].max()}")
             self.logger.info(f"Number of municipalities: {df_yearly['municipality'].nunique()}")
@@ -99,7 +90,6 @@ class BenefitsFetcher(BaseFetcher):
 
 def main():
     fetcher = BenefitsFetcher()
-    # First run to inspect metadata
     df = fetcher.fetch()
     
 if __name__ == "__main__":
