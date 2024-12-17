@@ -437,6 +437,7 @@
       <column caption='Unemployment Rate' datatype='real' name='[unemployment_rate]' role='measure' type='quantitative' />
       <column caption='Year (Municipality Socio Economic)' datatype='integer' name='[year (municipality_socio_economic)]' role='dimension' type='quantitative' />
       <column caption='Year' datatype='integer' name='[year]' role='dimension' type='quantitative' />
+      <column-instance column='[crime_category]' derivation='None' name='[none:crime_category:nk]' pivot='key' type='nominal' />
       <column-instance column='[latitude]' derivation='None' name='[none:latitude:qk]' pivot='key' type='quantitative' />
       <column-instance column='[longitude]' derivation='None' name='[none:longitude:qk]' pivot='key' type='quantitative' />
       <group hidden='true' name='[Exclusions (latitude,longitude)]' name-style='unqualified' user:auto-column='exclude'>
@@ -446,6 +447,33 @@
         </groupfilter>
       </group>
       <layout dim-ordering='alphabetic' measure-ordering='alphabetic' rowDisplayCount='100' show-structure='true' />
+      <style>
+        <style-rule element='mark'>
+          <encoding attr='color' field='[none:crime_category:nk]' type='palette'>
+            <map to='#4e79a7'>
+              <bucket>&quot;Drug &amp; Weapons Offenses&quot;</bucket>
+            </map>
+            <map to='#59a14f'>
+              <bucket>&quot;Sexual Offenses&quot;</bucket>
+            </map>
+            <map to='#76b7b2'>
+              <bucket>&quot;Public Order &amp; Authority&quot;</bucket>
+            </map>
+            <map to='#b07aa1'>
+              <bucket>&quot;Violent Crimes&quot;</bucket>
+            </map>
+            <map to='#e15759'>
+              <bucket>&quot;Property Crimes&quot;</bucket>
+            </map>
+            <map to='#edc948'>
+              <bucket>&quot;Special Legislation&quot;</bucket>
+            </map>
+            <map to='#f28e2b'>
+              <bucket>&quot;Economic Crimes&quot;</bucket>
+            </map>
+          </encoding>
+        </style-rule>
+      </style>
       <semantic-values>
         <semantic-value key='[Country].[Name]' value='&quot;United Kingdom&quot;' />
       </semantic-values>
@@ -530,7 +558,7 @@
       <layout-options>
         <title>
           <formatted-text>
-            <run fontcolor='#000000' fontname='Benton Sans Book'>Crime Rates Across Danish Municipalities (2023)</run>
+            <run fontalignment='1' fontcolor='#000000' fontname='Benton Sans Book'>Crime Rates across Danish Municipalities (2023)</run>
           </formatted-text>
         </title>
       </layout-options>
@@ -592,8 +620,8 @@
         </view>
         <style>
           <style-rule element='axis'>
-            <encoding attr='space' class='0' field='[federated.0olxw610bq41h21ffv4p50bsz2gd].[none:longitude:qk]' field-type='quantitative' max='1724570.3648438915' min='1277965.8637419108' projection='EPSG:3857' range-type='fixed' scope='cols' type='space' />
-            <encoding attr='space' class='0' field='[federated.0olxw610bq41h21ffv4p50bsz2gd].[none:latitude:qk]' field-type='quantitative' max='7564200.400768823' min='7220776.1957227997' projection='EPSG:3857' range-type='fixed' scope='rows' type='space' />
+            <encoding attr='space' class='0' field='[federated.0olxw610bq41h21ffv4p50bsz2gd].[none:longitude:qk]' field-type='quantitative' max='1730663.672437795' min='869656.82040512993' projection='EPSG:3857' range-type='fixed' scope='cols' type='space' />
+            <encoding attr='space' class='0' field='[federated.0olxw610bq41h21ffv4p50bsz2gd].[none:latitude:qk]' field-type='quantitative' max='8041824.597022485' min='7128974.3759880923' projection='EPSG:3857' range-type='fixed' scope='rows' type='space' />
           </style-rule>
           <style-rule element='mark'>
             <encoding attr='color' field='[federated.0olxw610bq41h21ffv4p50bsz2gd].[usr:Calculation_1009721134648594434:qk]' num-steps='5' palette='orange_gold_10_0' type='interpolated' />
@@ -666,59 +694,64 @@
       <simple-id uuid='{C8C7A5CA-FAC0-4933-A0DB-F1AD4DC7BAB3}' />
     </worksheet>
     <worksheet name='Income/Crime'>
+      <layout-options>
+        <title>
+          <formatted-text>
+            <run fontalignment='1'>Change in Criminal Activity by Category since 2008</run>
+          </formatted-text>
+        </title>
+      </layout-options>
       <table>
         <view>
           <datasources>
             <datasource caption='Crime Data Denmark' name='federated.0olxw610bq41h21ffv4p50bsz2gd' />
           </datasources>
           <datasource-dependencies datasource='federated.0olxw610bq41h21ffv4p50bsz2gd'>
-            <column caption='Crime Rate per 100k' datatype='real' name='[Calculation_1009721134648594434]' role='measure' type='quantitative'>
-              <calculation class='tableau' formula='SUM([count])/SUM([total_population]) * 100000' />
-            </column>
-            <column-instance column='[avg_income]' derivation='Avg' name='[avg:avg_income:qk]' pivot='key' type='quantitative' />
-            <column caption='Avg Income' datatype='real' name='[avg_income]' role='measure' type='quantitative' />
-            <column caption='Broader Region' datatype='string' name='[broader_region]' role='dimension' type='nominal' />
             <column caption='Count' datatype='integer' name='[count]' role='measure' type='quantitative' />
-            <column caption='Municipality Name' datatype='string' name='[municipality_name]' role='dimension' type='nominal' />
-            <column-instance column='[broader_region]' derivation='None' name='[none:broader_region:nk]' pivot='key' type='nominal' />
-            <column-instance column='[municipality_name]' derivation='None' name='[none:municipality_name:nk]' pivot='key' type='nominal' />
-            <column caption='Total Population' datatype='real' name='[total_population]' role='measure' type='quantitative' />
-            <column-instance column='[Calculation_1009721134648594434]' derivation='User' name='[usr:Calculation_1009721134648594434:qk]' pivot='key' type='quantitative' />
+            <column caption='Crime Category' datatype='string' name='[crime_category]' role='dimension' type='nominal' />
+            <column-instance column='[crime_category]' derivation='None' name='[none:crime_category:nk]' pivot='key' type='nominal' />
+            <column-instance column='[year]' derivation='None' name='[none:year:qk]' pivot='key' type='quantitative' />
+            <column-instance column='[count]' derivation='Sum' name='[pcdf:sum:count:qk:2]' pivot='key' type='quantitative'>
+              <table-calc diff-options='Relative' ordering-type='Rows' type='PctDiff'>
+                <address>
+                  <value>-2</value>
+                </address>
+              </table-calc>
+            </column-instance>
+            <column caption='Year' datatype='integer' name='[year]' role='dimension' type='quantitative' />
           </datasource-dependencies>
-          <filter class='quantitative' column='[federated.0olxw610bq41h21ffv4p50bsz2gd].[usr:Calculation_1009721134648594434:qk]' included-values='non-null' />
+          <filter class='categorical' column='[federated.0olxw610bq41h21ffv4p50bsz2gd].[none:crime_category:nk]'>
+            <groupfilter function='level-members' level='[none:crime_category:nk]' user:ui-enumeration='all' user:ui-marker='enumerate' />
+          </filter>
+          <filter class='quantitative' column='[federated.0olxw610bq41h21ffv4p50bsz2gd].[none:year:qk]' included-values='in-range'>
+            <min>2008</min>
+            <max>2023</max>
+          </filter>
           <slices>
-            <column>[federated.0olxw610bq41h21ffv4p50bsz2gd].[usr:Calculation_1009721134648594434:qk]</column>
+            <column>[federated.0olxw610bq41h21ffv4p50bsz2gd].[none:crime_category:nk]</column>
+            <column>[federated.0olxw610bq41h21ffv4p50bsz2gd].[none:year:qk]</column>
           </slices>
           <aggregation value='true' />
         </view>
-        <style />
+        <style>
+          <style-rule element='axis'>
+            <encoding attr='space' class='0' field='[federated.0olxw610bq41h21ffv4p50bsz2gd].[none:year:qk]' field-type='quantitative' max='2024' min='2008' range-type='fixed' scope='cols' type='space' />
+            <format attr='width' field='[federated.0olxw610bq41h21ffv4p50bsz2gd].[pcdf:sum:count:qk:2]' value='60' />
+          </style-rule>
+        </style>
         <panes>
           <pane selection-relaxation-option='selection-relaxation-allow'>
             <view>
-              <breakdown value='on' />
+              <breakdown value='auto' />
             </view>
             <mark class='Automatic' />
             <encodings>
-              <color column='[federated.0olxw610bq41h21ffv4p50bsz2gd].[none:broader_region:nk]' />
-              <lod column='[federated.0olxw610bq41h21ffv4p50bsz2gd].[none:municipality_name:nk]' />
+              <color column='[federated.0olxw610bq41h21ffv4p50bsz2gd].[none:crime_category:nk]' />
             </encodings>
-            <style>
-              <style-rule element='mark'>
-                <format attr='mark-labels-cull' value='true' />
-                <format attr='mark-labels-line-first' value='true' />
-                <format attr='mark-labels-line-last' value='true' />
-                <format attr='mark-labels-range-min' value='true' />
-                <format attr='mark-labels-range-max' value='true' />
-                <format attr='mark-labels-mode' value='all' />
-                <format attr='mark-labels-range-scope' value='pane' />
-                <format attr='mark-labels-range-field' value='' />
-                <format attr='mark-labels-show' value='false' />
-              </style-rule>
-            </style>
           </pane>
         </panes>
-        <rows>[federated.0olxw610bq41h21ffv4p50bsz2gd].[avg:avg_income:qk]</rows>
-        <cols>[federated.0olxw610bq41h21ffv4p50bsz2gd].[usr:Calculation_1009721134648594434:qk]</cols>
+        <rows>[federated.0olxw610bq41h21ffv4p50bsz2gd].[pcdf:sum:count:qk:2]</rows>
+        <cols>[federated.0olxw610bq41h21ffv4p50bsz2gd].[none:year:qk]</cols>
       </table>
       <simple-id uuid='{B4FF55E2-3D7E-4DDB-A196-A57E1FB7C5CC}' />
     </worksheet>
@@ -809,7 +842,7 @@
     </worksheet>
   </worksheets>
   <windows source-height='30'>
-    <window class='worksheet' maximized='true' name='2'>
+    <window class='worksheet' name='2'>
       <cards>
         <edge name='left'>
           <strip size='160'>
@@ -825,7 +858,7 @@
           <strip size='2147483647'>
             <card type='rows' />
           </strip>
-          <strip size='31'>
+          <strip size='2147483647'>
             <card type='title' />
           </strip>
         </edge>
@@ -895,13 +928,14 @@
         </edge>
         <edge name='right'>
           <strip size='160'>
-            <card pane-specification-id='0' param='[federated.0olxw610bq41h21ffv4p50bsz2gd].[none:broader_region:nk]' type='color' />
+            <card param='[federated.0olxw610bq41h21ffv4p50bsz2gd].[none:crime_category:nk]' type='filter' />
+            <card pane-specification-id='0' param='[federated.0olxw610bq41h21ffv4p50bsz2gd].[none:crime_category:nk]' type='color' />
           </strip>
         </edge>
       </cards>
       <simple-id uuid='{625B1FC7-981C-4747-BB3E-BE649E9F7773}' />
     </window>
-    <window class='worksheet' name='Sheet 4'>
+    <window class='worksheet' maximized='true' name='Sheet 4'>
       <cards>
         <edge name='left'>
           <strip size='160'>
